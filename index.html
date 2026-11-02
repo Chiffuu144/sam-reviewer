@@ -226,6 +226,23 @@
     .exam-intro { min-height: 105px; padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 18px; border: 1px solid var(--exam-border); background: var(--exam-bg); border-radius: 14px; transition: background-color .45s, color .4s, border-color .4s; }
     .exam-intro strong { display: block; margin-bottom: 4px; font-size: 13px; }
     .exam-intro p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .answer-keys { margin-top: 26px; }
+    .secret-toggle { min-height: 36px; padding: 0 11px; display: inline-flex; align-items: center; gap: 8px; color: var(--muted); background: transparent; border: 1px dashed var(--line); border-radius: 10px; font-size: 11px; font-weight: 650; cursor: pointer; }
+    .secret-toggle:hover { color: var(--text); background: var(--surface-hover); }
+    .secret-toggle svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+    .answer-key-options { margin-top: 18px; }
+    .answer-key-options > h2 { margin-bottom: 8px; font-size: clamp(24px, 4vw, 32px); letter-spacing: -1px; }
+    .answer-key-intro { margin-bottom: 16px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .answer-key-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
+    .answer-key { min-width: 0; border: 1px solid var(--exam-border); background: var(--exam-bg); border-radius: 14px; overflow: hidden; }
+    .answer-key-button { width: 100%; min-height: 52px; padding: 11px 14px; display: flex; align-items: center; gap: 10px; color: var(--text); background: transparent; border: 0; text-align: left; font-size: 12px; font-weight: 750; cursor: pointer; }
+    .answer-key-button:hover { background: var(--surface-hover); }
+    .answer-key-button svg { width: 19px; height: 19px; flex: 0 0 19px; fill: none; stroke: var(--lime); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+    .answer-key-content { padding: 0 14px 16px; }
+    .answer-key-section { padding-top: 13px; border-top: 1px solid var(--line); }
+    .answer-key-section h3 { margin: 0 0 8px; font-size: 12px; }
+    .answer-key-list { margin: 0; padding-left: 22px; color: var(--subtle-text); font-size: 11px; line-height: 1.55; }
+    .answer-key-list li { padding: 3px 0; }
     .exam-wrap { max-width: 860px; margin: 0 auto; }
     .exam-heading { margin: 23px 0 7px; font-size: clamp(26px, 4vw, 36px); letter-spacing: -1px; }
     .exam-instructions { margin: 0 0 20px; color: var(--muted); font-size: 12px; line-height: 1.6; }
@@ -362,6 +379,7 @@
       .hint-status { margin-left: auto; }
       .exam-intro { align-items: flex-start; flex-direction: column; }
       .exam-options { grid-template-columns: 1fr; }
+      .answer-key-grid { grid-template-columns: 1fr; }
       .exam-choices { grid-template-columns: 1fr; }
       .exam-section { padding: 15px; }
       .exam-submit-row { align-items: flex-start; flex-direction: column; }
@@ -514,6 +532,32 @@
           </aside>
         </div>
         <p class="source-note">Study note: Some guide entries simplify real-world details. Questions use corrected command syntax and clarify version-dependent or misleading claims.</p>
+        <section class="answer-keys" aria-labelledby="answer-keys-heading">
+          <button class="secret-toggle" id="answer-key-secret-toggle" type="button" aria-expanded="false" aria-controls="answer-key-options">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"></path></svg>
+            <span>Secret study menu</span>
+          </button>
+          <div class="answer-key-options hidden" id="answer-key-options">
+            <h2 id="answer-keys-heading">Answer keys</h2>
+            <p class="answer-key-intro">Choose a unit to show its organized answer key.</p>
+            <div class="answer-key-grid">
+              <article class="answer-key">
+                <button class="answer-key-button" type="button" aria-expanded="false" aria-controls="unit-test-1-answer-key">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h8l4 4V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z"></path><path d="M14 3.5v5h4M8 13l1.5 1.5L12 12m2 2h2m-8 4 1.5 1.5L12 17m2 2h2"></path></svg>
+                  Unit Test 1 Answer Key
+                </button>
+                <div class="answer-key-content hidden" id="unit-test-1-answer-key"></div>
+              </article>
+              <article class="answer-key">
+                <button class="answer-key-button" type="button" aria-expanded="false" aria-controls="unit-test-2-answer-key">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h8l4 4V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z"></path><path d="M14 3.5v5h4M8 13l1.5 1.5L12 12m2 2h2m-8 4 1.5 1.5L12 17m2 2h2"></path></svg>
+                  Unit Test 2 Answer Key
+                </button>
+                <div class="answer-key-content hidden" id="unit-test-2-answer-key"></div>
+              </article>
+            </div>
+          </div>
+        </section>
       </section>
 
       <section class="game-wrap hidden" id="game-screen" aria-label="Quiz game">
@@ -906,6 +950,72 @@
       unitTest2: { title: "Unit Test 2", sections: UNIT_TEST_2_SECTIONS }
     };
 
+    function renderAnswerKeys() {
+      Object.entries(EXAMS).forEach(([examKey, exam]) => {
+        const container = $(`${examKey === "unitTest1" ? "unit-test-1" : "unit-test-2"}-answer-key`);
+        exam.sections.forEach((section) => {
+          const sectionElement = document.createElement("section");
+          sectionElement.className = "answer-key-section";
+          const heading = document.createElement("h3");
+          heading.textContent = section.title;
+          const list = document.createElement("ol");
+          list.className = "answer-key-list";
+          const groupedQuestions = new Map();
+          section.questions.forEach((question) => {
+            if (!question.group) return;
+            if (!groupedQuestions.has(question.group)) groupedQuestions.set(question.group, []);
+            groupedQuestions.get(question.group).push(question);
+          });
+          const renderedGroups = new Set();
+          section.questions.forEach((question) => {
+            if (question.group) {
+              const groupQuestions = groupedQuestions.get(question.group);
+              const hasGenericAnswers = groupQuestions.some((item) => /^another valid/i.test(item.expected || ""));
+              if (hasGenericAnswers) {
+                if (renderedGroups.has(question.group)) return;
+                renderedGroups.add(question.group);
+                const first = groupQuestions[0];
+                const last = groupQuestions[groupQuestions.length - 1];
+                const acceptedAnswers = [...new Set(first.accepted)].map((answer) => answer.replace(/\b[a-z]/g, (letter) => letter.toUpperCase()));
+                const item = document.createElement("li");
+                const range = `${first.label.replace(/\.$/, "")}–${last.label.replace(/\.$/, "")}`;
+                item.textContent = `${range}. ${first.groupPrompt || first.expected} Accepted answers: ${acceptedAnswers.join(", ")}.`;
+                list.append(item);
+                return;
+              }
+            }
+
+            const item = document.createElement("li");
+            let answer;
+            if (question.type === "choice") {
+              const acceptedAnswers = question.accepted || [question.answer];
+              const correctOptions = question.options
+                .map((option, index) => acceptedAnswers.some((accepted) => normalizeAnswer(accepted) === normalizeAnswer(option))
+                  ? `${String.fromCharCode(65 + index)}. ${option}`
+                  : "")
+                .filter(Boolean);
+              answer = correctOptions.length ? correctOptions.join(" / ") : question.answer;
+            } else if (question.type === "multi") {
+              answer = question.answer.join(", ");
+            } else {
+              answer = question.expected || question.answer || question.accepted.join(", ");
+              const expectedAnswer = normalizeAnswer(answer);
+              const alternatives = (question.accepted || []).filter((accepted) => normalizeAnswer(accepted) !== expectedAnswer);
+              if (alternatives.length) {
+                const formattedAlternatives = alternatives.map((alternative) => alternative.replace(/\b[a-z]/g, (letter) => letter.toUpperCase()));
+                answer += ` (also accepted: ${formattedAlternatives.join(", ")})`;
+              }
+            }
+            const prompt = question.prompt ? ` ${question.prompt} —` : "";
+            item.textContent = `${question.label}${prompt} ${answer}`;
+            list.append(item);
+          });
+          sectionElement.append(heading, list);
+          container.append(sectionElement);
+        });
+      });
+    }
+
     const QUEST_SIDES = {
       unitTest1: {
         title: "Unit Test 1",
@@ -938,6 +1048,7 @@
     const SESSION_STORAGE_KEY = "kernelQuestSessionV1";
     const ROUND_SIZE = 10;
     const $ = (id) => document.getElementById(id);
+    renderAnswerKeys();
     function loadCurrentUser() {
       try {
         const email = localStorage.getItem(SESSION_STORAGE_KEY);
@@ -1661,6 +1772,27 @@
     $("start-cyber-exam-button").addEventListener("click", () => {
       selectQuestSide("unitTest2");
       startExam("unitTest2");
+    });
+    $("answer-key-secret-toggle").addEventListener("click", (event) => {
+      const button = event.currentTarget;
+      const options = $("answer-key-options");
+      const isExpanded = button.getAttribute("aria-expanded") === "true";
+      button.setAttribute("aria-expanded", String(!isExpanded));
+      options.classList.toggle("hidden", isExpanded);
+      button.querySelector("span").textContent = isExpanded ? "Secret study menu" : "Hide secret menu";
+      if (isExpanded) {
+        document.querySelectorAll(".answer-key-button").forEach((answerKeyButton) => {
+          answerKeyButton.setAttribute("aria-expanded", "false");
+          $(answerKeyButton.getAttribute("aria-controls")).classList.add("hidden");
+        });
+      }
+    });
+    document.querySelectorAll(".answer-key-button").forEach((button) => {
+      button.addEventListener("click", () => {
+        const isExpanded = button.getAttribute("aria-expanded") === "true";
+        button.setAttribute("aria-expanded", String(!isExpanded));
+        $(button.getAttribute("aria-controls")).classList.toggle("hidden", isExpanded);
+      });
     });
     $("exam-form").addEventListener("submit", submitExam);
     $("exam-home-button").addEventListener("click", () => returnHome(

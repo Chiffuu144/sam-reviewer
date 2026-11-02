@@ -226,23 +226,26 @@
     .exam-intro { min-height: 105px; padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 18px; border: 1px solid var(--exam-border); background: var(--exam-bg); border-radius: 14px; transition: background-color .45s, color .4s, border-color .4s; }
     .exam-intro strong { display: block; margin-bottom: 4px; font-size: 13px; }
     .exam-intro p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
-    .answer-keys { margin-top: 26px; }
-    .secret-toggle { min-height: 36px; padding: 0 11px; display: inline-flex; align-items: center; gap: 8px; color: var(--muted); background: transparent; border: 1px dashed var(--line); border-radius: 10px; font-size: 11px; font-weight: 650; cursor: pointer; }
-    .secret-toggle:hover { color: var(--text); background: var(--surface-hover); }
-    .secret-toggle svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-    .answer-key-options { margin-top: 18px; }
-    .answer-key-options > h2 { margin-bottom: 8px; font-size: clamp(24px, 4vw, 32px); letter-spacing: -1px; }
-    .answer-key-intro { margin-bottom: 16px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .brand-secret-trigger { padding: 0; color: inherit; background: none; border: 0; font: inherit; letter-spacing: inherit; cursor: pointer; }
+    .brand-secret-trigger:hover { color: var(--lime); }
+    .brand-secret-trigger:focus-visible { border-radius: 3px; outline: 2px solid var(--blue); outline-offset: 3px; }
+    .answer-key-overlay { position: fixed; z-index: 30; inset: 0; padding: 24px; display: grid; place-items: center; background: rgba(15, 23, 42, .62); }
+    .answer-key-dialog { width: min(940px, 100%); max-height: min(88vh, 900px); padding: 22px; overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 24px 80px rgba(0, 0, 0, .28); }
+    .answer-key-dialog-head { margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .answer-key-dialog-head h2 { margin: 0; font-size: clamp(24px, 4vw, 32px); letter-spacing: -1px; }
+    .answer-key-close { width: 38px; height: 38px; display: grid; place-items: center; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; font-size: 22px; cursor: pointer; }
+    .answer-key-close:hover { color: var(--text); background: var(--surface-hover); }
     .answer-key-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
     .answer-key { min-width: 0; border: 1px solid var(--exam-border); background: var(--exam-bg); border-radius: 14px; overflow: hidden; }
     .answer-key-button { width: 100%; min-height: 52px; padding: 11px 14px; display: flex; align-items: center; gap: 10px; color: var(--text); background: transparent; border: 0; text-align: left; font-size: 12px; font-weight: 750; cursor: pointer; }
     .answer-key-button:hover { background: var(--surface-hover); }
     .answer-key-button svg { width: 19px; height: 19px; flex: 0 0 19px; fill: none; stroke: var(--lime); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-    .answer-key-content { padding: 0 14px 16px; }
+    .answer-key-content { max-height: 58vh; padding: 0 14px 16px; overflow: auto; }
     .answer-key-section { padding-top: 13px; border-top: 1px solid var(--line); }
     .answer-key-section h3 { margin: 0 0 8px; font-size: 12px; }
-    .answer-key-list { margin: 0; padding-left: 22px; color: var(--subtle-text); font-size: 11px; line-height: 1.55; }
-    .answer-key-list li { padding: 3px 0; }
+    .answer-key-list { margin: 0; padding: 0; color: var(--text); font-size: 14px; line-height: 1.7; list-style: none; }
+    .answer-key-list li { padding: 5px 0; border-top: 1px solid var(--line); }
+    .answer-key-list strong { font-weight: 800; }
     .exam-wrap { max-width: 860px; margin: 0 auto; }
     .exam-heading { margin: 23px 0 7px; font-size: clamp(26px, 4vw, 36px); letter-spacing: -1px; }
     .exam-instructions { margin: 0 0 20px; color: var(--muted); font-size: 12px; line-height: 1.6; }
@@ -379,6 +382,8 @@
       .hint-status { margin-left: auto; }
       .exam-intro { align-items: flex-start; flex-direction: column; }
       .exam-options { grid-template-columns: 1fr; }
+      .answer-key-overlay { padding: 12px; }
+      .answer-key-dialog { padding: 16px; }
       .answer-key-grid { grid-template-columns: 1fr; }
       .exam-choices { grid-template-columns: 1fr; }
       .exam-section { padding: 15px; }
@@ -399,7 +404,7 @@
     <header class="topbar">
       <div class="brand">
         <button class="brand-mark" id="terminal-home-button" type="button" aria-label="Go to home page" title="Home">&gt;_</button>
-        <div>Kernel Quest<small>LINUX &amp; OS EXAM TRAINER</small></div>
+        <div>Kernel <button class="brand-secret-trigger" id="answer-key-secret-toggle" type="button" aria-label="Open answer keys" aria-expanded="false" aria-controls="answer-key-overlay">Q</button>uest<small>LINUX &amp; OS EXAM TRAINER</small></div>
       </div>
       <div class="topbar-actions">
         <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false" title="Switch to light mode">
@@ -532,14 +537,14 @@
           </aside>
         </div>
         <p class="source-note">Study note: Some guide entries simplify real-world details. Questions use corrected command syntax and clarify version-dependent or misleading claims.</p>
-        <section class="answer-keys" aria-labelledby="answer-keys-heading">
-          <button class="secret-toggle" id="answer-key-secret-toggle" type="button" aria-expanded="false" aria-controls="answer-key-options">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"></path></svg>
-            <span>Secret study menu</span>
-          </button>
-          <div class="answer-key-options hidden" id="answer-key-options">
-            <h2 id="answer-keys-heading">Answer keys</h2>
-            <p class="answer-key-intro">Choose a unit to show its organized answer key.</p>
+      </section>
+
+      <section class="answer-key-overlay hidden" id="answer-key-overlay" aria-label="Answer keys">
+        <div class="answer-key-dialog" role="dialog" aria-modal="true" aria-labelledby="answer-keys-heading">
+          <div class="answer-key-dialog-head">
+            <h2 id="answer-keys-heading">Answer Keys</h2>
+            <button class="answer-key-close" id="answer-key-close" type="button" aria-label="Close answer keys">&times;</button>
+          </div>
             <div class="answer-key-grid">
               <article class="answer-key">
                 <button class="answer-key-button" type="button" aria-expanded="false" aria-controls="unit-test-1-answer-key">
@@ -553,11 +558,10 @@
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h8l4 4V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z"></path><path d="M14 3.5v5h4M8 13l1.5 1.5L12 12m2 2h2m-8 4 1.5 1.5L12 17m2 2h2"></path></svg>
                   Unit Test 2 Answer Key
                 </button>
-                <div class="answer-key-content hidden" id="unit-test-2-answer-key"></div>
+                <div class="answer-key-content hidden" id="unit-test-2-answer-key">                </div>
               </article>
             </div>
-          </div>
-        </section>
+        </div>
       </section>
 
       <section class="game-wrap hidden" id="game-screen" aria-label="Quiz game">
@@ -976,10 +980,15 @@
                 renderedGroups.add(question.group);
                 const first = groupQuestions[0];
                 const last = groupQuestions[groupQuestions.length - 1];
-                const acceptedAnswers = [...new Set(first.accepted)].map((answer) => answer.replace(/\b[a-z]/g, (letter) => letter.toUpperCase()));
+                const acceptedAnswers = [...new Map(first.accepted.map((answer) => [normalizeAnswer(answer), answer])).values()]
+                  .map((answer) => answer.replace(/\b[a-z]/g, (letter) => letter.toUpperCase()));
                 const item = document.createElement("li");
                 const range = `${first.label.replace(/\.$/, "")}–${last.label.replace(/\.$/, "")}`;
-                item.textContent = `${range}. ${first.groupPrompt || first.expected} Accepted answers: ${acceptedAnswers.join(", ")}.`;
+                const number = document.createElement("span");
+                number.textContent = `${range}. `;
+                const answer = document.createElement("strong");
+                answer.textContent = acceptedAnswers.join(", ");
+                item.append(number, answer);
                 list.append(item);
                 return;
               }
@@ -990,7 +999,13 @@
             if (question.type === "choice") {
               const acceptedAnswers = question.accepted || [question.answer];
               const correctOptions = question.options
-                .map((option, index) => acceptedAnswers.some((accepted) => normalizeAnswer(accepted) === normalizeAnswer(option))
+                .map((option, index) => acceptedAnswers.some((accepted) => {
+                  const normalizedAccepted = normalizeAnswer(accepted);
+                  const normalizedOption = normalizeAnswer(option);
+                  return normalizedAccepted.trim()
+                    ? normalizedAccepted === normalizedOption
+                    : String(accepted).trim().toLowerCase() === String(option).trim().toLowerCase();
+                })
                   ? `${String.fromCharCode(65 + index)}. ${option}`
                   : "")
                 .filter(Boolean);
@@ -998,16 +1013,18 @@
             } else if (question.type === "multi") {
               answer = question.answer.join(", ");
             } else {
-              answer = question.expected || question.answer || question.accepted.join(", ");
-              const expectedAnswer = normalizeAnswer(answer);
-              const alternatives = (question.accepted || []).filter((accepted) => normalizeAnswer(accepted) !== expectedAnswer);
-              if (alternatives.length) {
-                const formattedAlternatives = alternatives.map((alternative) => alternative.replace(/\b[a-z]/g, (letter) => letter.toUpperCase()));
-                answer += ` (also accepted: ${formattedAlternatives.join(", ")})`;
-              }
+              const acceptedAnswers = question.accepted || [question.expected || question.answer];
+              answer = question.expected || question.answer || acceptedAnswers[0];
+              const alternatives = [...new Map(acceptedAnswers
+                .filter((accepted) => normalizeAnswer(accepted) !== normalizeAnswer(answer))
+                .map((accepted) => [normalizeAnswer(accepted), accepted])).values()];
+              if (alternatives.length) answer += ` / ${alternatives.join(" / ")}`;
             }
-            const prompt = question.prompt ? ` ${question.prompt} —` : "";
-            item.textContent = `${question.label}${prompt} ${answer}`;
+            const number = document.createElement("span");
+            number.textContent = `${question.label} `;
+            const answerText = document.createElement("strong");
+            answerText.textContent = answer;
+            item.append(number, answerText);
             list.append(item);
           });
           sectionElement.append(heading, list);
@@ -1773,18 +1790,29 @@
       selectQuestSide("unitTest2");
       startExam("unitTest2");
     });
-    $("answer-key-secret-toggle").addEventListener("click", (event) => {
-      const button = event.currentTarget;
-      const options = $("answer-key-options");
-      const isExpanded = button.getAttribute("aria-expanded") === "true";
-      button.setAttribute("aria-expanded", String(!isExpanded));
-      options.classList.toggle("hidden", isExpanded);
-      button.querySelector("span").textContent = isExpanded ? "Secret study menu" : "Hide secret menu";
-      if (isExpanded) {
-        document.querySelectorAll(".answer-key-button").forEach((answerKeyButton) => {
-          answerKeyButton.setAttribute("aria-expanded", "false");
-          $(answerKeyButton.getAttribute("aria-controls")).classList.add("hidden");
-        });
+    function closeAnswerKeys() {
+      $("answer-key-overlay").classList.add("hidden");
+      $("answer-key-secret-toggle").setAttribute("aria-expanded", "false");
+    }
+
+    $("answer-key-secret-toggle").addEventListener("click", () => {
+      const overlay = $("answer-key-overlay");
+      const isExpanded = $("answer-key-secret-toggle").getAttribute("aria-expanded") === "true";
+      overlay.classList.toggle("hidden", isExpanded);
+      $("answer-key-secret-toggle").setAttribute("aria-expanded", String(!isExpanded));
+      if (!isExpanded) $("answer-key-close").focus();
+    });
+    $("answer-key-close").addEventListener("click", () => {
+      closeAnswerKeys();
+      $("answer-key-secret-toggle").focus();
+    });
+    $("answer-key-overlay").addEventListener("click", (event) => {
+      if (event.target === $("answer-key-overlay")) closeAnswerKeys();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !$("answer-key-overlay").classList.contains("hidden")) {
+        closeAnswerKeys();
+        $("answer-key-secret-toggle").focus();
       }
     });
     document.querySelectorAll(".answer-key-button").forEach((button) => {
